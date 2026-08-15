@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# SQLite database
+*.db
+*.db-shm
+*.db-wal
+
+# Environment files
+.env
+.env.*
+
+# Build output
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
