@@ -4,44 +4,50 @@ TaskFlow is a lightweight full-stack Kanban task board built as a take-home assi
 
 It allows users to create, edit, delete, filter, and move tasks between columns. All task changes are persisted to a SQLite database through a Node.js/Express backend.
 
+## Live Demo
+
+**Frontend:** https://taskflow-frontend-ltvf.onrender.com/
+
+**GitHub:** https://github.com/Parvez8561/TaskFlow
+
 ## Features
 
-- View tasks in To Do, In Progress, and Done columns
-- Create new tasks
-- Edit task title and priority
-- Delete tasks
-- Move tasks between columns
-- Filter tasks by priority
-- Backend validation for required fields
-- User-friendly error messages
-- SQLite database persistence
-- Seed data for a fresh database
-- Backend automated tests
+* View tasks in To Do, In Progress, and Done columns
+* Create new tasks
+* Edit existing tasks
+* Delete tasks
+* Move tasks between columns
+* Filter tasks by priority
+* Backend validation for required fields
+* User-friendly error messages
+* SQLite database persistence
+* Seed data for a fresh database
+* Backend automated tests
 
 ## Tech Stack
 
 ### Frontend
 
-- React
-- Vite
-- JavaScript
-- CSS
+* React
+* Vite
+* JavaScript
+* CSS
 
 ### Backend
 
-- Node.js
-- Express
-- better-sqlite3
-- CORS
+* Node.js
+* Express
+* better-sqlite3
+* CORS
 
 ### Testing
 
-- Jest
-- Supertest
+* Jest
+* Supertest
 
 ### Database
 
-- SQLite
+* SQLite
 
 ## Project Structure
 
@@ -74,12 +80,17 @@ TaskFlow/
 
 Make sure the following are installed:
 
-- Node.js
-- npm
+* Node.js
+* npm
 
 ## Installation
 
-Clone the repository and enter the project directory.
+Clone the repository:
+
+```bash
+git clone https://github.com/Parvez8561/TaskFlow.git
+cd TaskFlow
+```
 
 ### Backend
 
@@ -124,11 +135,15 @@ node seed.js
 
 This creates:
 
-- One TaskFlow board
-- To Do column
-- In Progress column
-- Done column
-- Sample tasks
+* One TaskFlow board
+* To Do column
+* In Progress column
+* Done column
+* Sample tasks
+
+The database uses foreign keys to maintain relationships between boards, columns, and tasks.
+
+Required fields such as task title use `NOT NULL` constraints.
 
 ## Running the Application
 
@@ -236,7 +251,7 @@ backend/queries.js
 
 ### 1. Task Count Per Column
 
-The first query counts tasks for each column using SQL aggregation:
+This query counts tasks for each column using SQL aggregation:
 
 ```sql
 SELECT
@@ -252,7 +267,7 @@ ORDER BY columns.position;
 
 ### 2. Tasks By Priority
 
-The second query retrieves tasks with a specific priority and sorts them newest first:
+This query retrieves tasks with a specific priority and sorts them newest first:
 
 ```sql
 SELECT
@@ -273,12 +288,12 @@ ORDER BY tasks.created_at DESC;
 
 The backend validates:
 
-- Task title cannot be empty
-- Priority must be `low`, `medium`, or `high`
-- Column must exist
-- Task must exist before updating or deleting
+* Task title cannot be empty
+* Priority must be `low`, `medium`, or `high`
+* Column must exist
+* Task must exist before updating or deleting
 
-The frontend also displays user-friendly error messages when requests fail.
+The frontend also displays user-friendly error messages when backend requests fail.
 
 ## Tests
 
@@ -306,31 +321,51 @@ Tests:       4 passed, 4 total
 
 ## Design Decisions and Assumptions
 
-- SQLite was selected because the assignment allows it and it keeps local setup simple.
-- Tasks use the existing board columns: To Do, In Progress, and Done.
-- Task movement is implemented using buttons instead of drag-and-drop because the assignment explicitly allows a simple control.
-- A task title is required and is validated both on the frontend and backend.
-- A task priority defaults to Medium when creating a task.
+* SQLite was selected because the assignment allows it and it keeps local setup simple.
+* Tasks use the existing board columns: To Do, In Progress, and Done.
+* Task movement is implemented using buttons instead of drag-and-drop because the assignment explicitly allows a simple control.
+* A task title is required and is validated both on the frontend and backend.
+* A task priority defaults to Medium when creating a task.
+* The implementation focuses on the required core functionality rather than adding features explicitly listed as out of scope.
+
+## Deployment
+
+The frontend is deployed on Render and is available at:
+
+https://taskflow-frontend-ltvf.onrender.com/
+
+The project was deployed to provide a working live demo for the assignment evaluation.
 
 ## What I Would Improve With More Time
 
 If more time were available, I would consider:
 
-- Drag-and-drop task movement
-- Task title search
-- More comprehensive API and frontend tests
-- Improved task descriptions in the UI
-- Better position management when tasks are moved or deleted
-- Deployment to a public hosting platform
+* Drag-and-drop task movement
+* Task title search
+* More comprehensive API and frontend tests
+* Improved task descriptions in the UI
+* Better position management when tasks are moved or deleted
+* More robust production database/deployment configuration
 
 ## Time Spent
 
-Approximately 1–2 days were spent implementing the project, including the frontend, backend API, SQLite database, validation, testing, and documentation.
+Approximately 1–2 days were spent implementing the project, including the frontend, backend API, SQLite database, validation, testing, documentation, and deployment.
 
 ## What I Learned
 
-One useful part of the project was working directly with SQLite and writing SQL queries instead of relying on an ORM. This helped reinforce how relationships, foreign keys, aggregation, and ordering work at the database level.
+One useful part of the project was working directly with SQLite and writing SQL queries instead of relying on an ORM. This helped reinforce how relational database relationships, foreign keys, aggregation, filtering, and ordering work at the database level.
+
+## Scope
+
+The following features were intentionally not included because they were explicitly listed as out of scope in the assignment:
+
+* User accounts/login
+* Multiple users or teams
+* Realtime updates between browser tabs
+* File uploads
+
+The implementation focuses on delivering a clean, functional, and testable task board.
 
 ## License
 
-This project was created as part of a take-home assignment.
+This project was created as part of a Full-Stack Developer take-home assignment.
