@@ -1,4 +1,3 @@
-```jsx
 import { useEffect, useState } from 'react'
 import './App.css'
 
@@ -15,19 +14,12 @@ const columnIds = {
 function App() {
   const [columns, setColumns] = useState([])
   const [priority, setPriority] = useState('All')
-
   const [newTask, setNewTask] = useState('')
   const [newTaskPriority, setNewTaskPriority] = useState('medium')
-
   const [editingTask, setEditingTask] = useState(null)
   const [editTitle, setEditTitle] = useState('')
   const [editPriority, setEditPriority] = useState('medium')
-
   const [error, setError] = useState('')
-
-  // =========================
-  // LOAD TASKS
-  // =========================
 
   const loadTasks = async () => {
     try {
@@ -44,26 +36,22 @@ function App() {
       const formattedColumns = columnNames.map((name, index) => ({
         id: index + 1,
         title: name,
-
         tasks: tasks
           .filter((task) => task.column_name === name)
           .map((task) => ({
             id: task.id,
             title: task.title,
             description: task.description || '',
-
             priority:
               task.priority.charAt(0).toUpperCase() +
               task.priority.slice(1),
-
             created_at: task.created_at,
           })),
       }))
 
       setColumns(formattedColumns)
-    } catch (error) {
-      console.error('Failed to load tasks:', error)
-
+    } catch (err) {
+      console.error('Failed to load tasks:', err)
       setError(
         'Unable to load tasks. Please make sure the backend server is running.'
       )
@@ -73,10 +61,6 @@ function App() {
   useEffect(() => {
     loadTasks()
   }, [])
-
-  // =========================
-  // ADD TASK
-  // =========================
 
   const addTask = async () => {
     if (!newTask.trim()) {
@@ -89,11 +73,9 @@ function App() {
 
       const response = await fetch(`${API_URL}/api/tasks`, {
         method: 'POST',
-
         headers: {
           'Content-Type': 'application/json',
         },
-
         body: JSON.stringify({
           title: newTask.trim(),
           description: '',
@@ -104,90 +86,69 @@ function App() {
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}))
-
         throw new Error(data.error || 'Failed to create task.')
       }
 
       setNewTask('')
       setNewTaskPriority('medium')
-
       await loadTasks()
-    } catch (error) {
-      console.error('Failed to add task:', error)
-
-      setError(
-        error.message || 'Unable to create task. Please try again.'
-      )
+    } catch (err) {
+      console.error('Failed to add task:', err)
+      setError(err.message || 'Unable to create task.')
     }
   }
-
-  // =========================
-  // MOVE TASK
-  // =========================
 
   const moveTask = async (taskId, columnName) => {
     try {
       setError('')
 
-      const response = await fetch(`${API_URL}/api/tasks/${taskId}`, {
-        method: 'PUT',
-
-        headers: {
-          'Content-Type': 'application/json',
-        },
-
-        body: JSON.stringify({
-          column_id: columnIds[columnName],
-        }),
-      })
+      const response = await fetch(
+        `${API_URL}/api/tasks/${taskId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            column_id: columnIds[columnName],
+          }),
+        }
+      )
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}))
-
         throw new Error(data.error || 'Failed to move task.')
       }
 
       await loadTasks()
-    } catch (error) {
-      console.error('Failed to move task:', error)
-
-      setError(
-        error.message || 'Unable to move task. Please try again.'
-      )
+    } catch (err) {
+      console.error('Failed to move task:', err)
+      setError(err.message || 'Unable to move task.')
     }
   }
-
-  // =========================
-  // DELETE TASK
-  // =========================
 
   const deleteTask = async (taskId) => {
     try {
       setError('')
 
-      const response = await fetch(`${API_URL}/api/tasks/${taskId}`, {
-        method: 'DELETE',
-      })
+      const response = await fetch(
+        `${API_URL}/api/tasks/${taskId}`,
+        {
+          method: 'DELETE',
+        }
+      )
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}))
-
         throw new Error(data.error || 'Failed to delete task.')
       }
 
       await loadTasks()
-    } catch (error) {
-      console.error('Failed to delete task:', error)
-
-      setError(
-        error.message || 'Unable to delete task. Please try again.'
-      )
+    } catch (err) {
+      console.error('Failed to delete task:', err)
+      setError(err.message || 'Unable to delete task.')
     }
   }
-
-  // =========================
-  // START EDIT
-  // =========================
 
   const startEdit = (task) => {
     setEditingTask(task)
@@ -196,19 +157,11 @@ function App() {
     setError('')
   }
 
-  // =========================
-  // CANCEL EDIT
-  // =========================
-
   const cancelEdit = () => {
     setEditingTask(null)
     setEditTitle('')
     setEditPriority('medium')
   }
-
-  // =========================
-  // SAVE EDIT
-  // =========================
 
   const saveEdit = async () => {
     if (!editTitle.trim()) {
@@ -223,11 +176,9 @@ function App() {
         `${API_URL}/api/tasks/${editingTask.id}`,
         {
           method: 'PATCH',
-
           headers: {
             'Content-Type': 'application/json',
           },
-
           body: JSON.stringify({
             title: editTitle.trim(),
             description: editingTask.description || '',
@@ -238,58 +189,35 @@ function App() {
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}))
-
         throw new Error(data.error || 'Failed to update task.')
       }
 
       cancelEdit()
-
       await loadTasks()
-    } catch (error) {
-      console.error('Failed to edit task:', error)
-
-      setError(
-        error.message || 'Unable to update task. Please try again.'
-      )
+    } catch (err) {
+      console.error('Failed to edit task:', err)
+      setError(err.message || 'Unable to update task.')
     }
-  }
-
-  // =========================
-  // CLOSE ERROR
-  // =========================
-
-  const closeError = () => {
-    setError('')
   }
 
   return (
     <div className="app">
-      {/* HEADER */}
-
       <header className="header">
         <div>
           <h1>TaskFlow</h1>
-
           <p>Manage your tasks with ease</p>
         </div>
 
         <div className="controls">
-          {/* PRIORITY FILTER */}
-
           <select
             value={priority}
             onChange={(e) => setPriority(e.target.value)}
           >
             <option value="All">All Priorities</option>
-
             <option value="High">High</option>
-
             <option value="Medium">Medium</option>
-
             <option value="Low">Low</option>
           </select>
-
-          {/* NEW TASK */}
 
           <input
             type="text"
@@ -303,16 +231,12 @@ function App() {
             }}
           />
 
-          {/* NEW TASK PRIORITY */}
-
           <select
             value={newTaskPriority}
             onChange={(e) => setNewTaskPriority(e.target.value)}
           >
             <option value="high">High</option>
-
             <option value="medium">Medium</option>
-
             <option value="low">Low</option>
           </select>
 
@@ -320,19 +244,12 @@ function App() {
         </div>
       </header>
 
-      {/* ERROR MESSAGE */}
-
       {error && (
         <div className="error-message">
           <span>{error}</span>
-
-          <button onClick={closeError} aria-label="Close error">
-            ×
-          </button>
+          <button onClick={() => setError('')}>×</button>
         </div>
       )}
-
-      {/* BOARD */}
 
       <main className="board">
         {columns.map((column) => {
@@ -345,7 +262,6 @@ function App() {
             <section className="column" key={column.id}>
               <div className="column-header">
                 <h2>{column.title}</h2>
-
                 <span>{filteredTasks.length}</span>
               </div>
 
@@ -356,39 +272,27 @@ function App() {
                       <h3>{task.title}</h3>
 
                       <div className="task-buttons">
-                        {/* EDIT */}
-
                         <button
                           className="edit-btn"
                           onClick={() => startEdit(task)}
-                          title="Edit task"
                         >
                           ✎
                         </button>
 
-                        {/* DELETE */}
-
                         <button
                           className="delete-btn"
                           onClick={() => deleteTask(task.id)}
-                          title="Delete task"
                         >
                           ×
                         </button>
                       </div>
                     </div>
 
-                    {/* PRIORITY */}
-
                     <span
-                      className={
-                        'priority ' + task.priority.toLowerCase()
-                      }
+                      className={`priority ${task.priority.toLowerCase()}`}
                     >
                       {task.priority}
                     </span>
-
-                    {/* START TASK */}
 
                     {column.title === 'To Do' && (
                       <button
@@ -400,8 +304,6 @@ function App() {
                         Start Task
                       </button>
                     )}
-
-                    {/* COMPLETE TASK */}
 
                     {column.title === 'In Progress' && (
                       <button
@@ -425,8 +327,6 @@ function App() {
         })}
       </main>
 
-      {/* EDIT MODAL */}
-
       {editingTask && (
         <div className="modal-overlay">
           <div className="edit-modal">
@@ -441,18 +341,13 @@ function App() {
               </button>
             </div>
 
-            {/* TITLE */}
-
             <label>Task Title</label>
 
             <input
               className="edit-input"
-              type="text"
               value={editTitle}
               onChange={(e) => setEditTitle(e.target.value)}
             />
-
-            {/* PRIORITY */}
 
             <label>Priority</label>
 
@@ -462,13 +357,9 @@ function App() {
               onChange={(e) => setEditPriority(e.target.value)}
             >
               <option value="high">High</option>
-
               <option value="medium">Medium</option>
-
               <option value="low">Low</option>
             </select>
-
-            {/* BUTTONS */}
 
             <div className="modal-actions">
               <button
@@ -493,4 +384,3 @@ function App() {
 }
 
 export default App
-```
