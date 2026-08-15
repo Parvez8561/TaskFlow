@@ -89,4 +89,4 @@ seed();
 
 console.log("Database reset and seed data inserted successfully!");
 
-db.close();
+// db.close();
