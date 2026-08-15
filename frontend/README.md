@@ -251,7 +251,7 @@ backend/queries.js
 
 ### 1. Task Count Per Column
 
-This query counts tasks for each column using SQL aggregation:
+The first query counts tasks for each column using SQL aggregation:
 
 ```sql
 SELECT
@@ -267,7 +267,7 @@ ORDER BY columns.position;
 
 ### 2. Tasks By Priority
 
-This query retrieves tasks with a specific priority and sorts them newest first:
+The second query retrieves tasks with a specific priority and sorts them newest first:
 
 ```sql
 SELECT
