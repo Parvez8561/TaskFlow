@@ -6,9 +6,9 @@ const API_URL = 'https://taskflow-w6na.onrender.com'
 const columnNames = ['To Do', 'In Progress', 'Done']
 
 const columnIds = {
-  'To Do': 4,
-  'In Progress': 5,
-  Done: 6,
+  'To Do': 1,
+  'In Progress': 2,
+  Done: 3,
 }
 
 function App() {
@@ -34,7 +34,7 @@ function App() {
       const tasks = await response.json()
 
       const formattedColumns = columnNames.map((name, index) => ({
-        id: index + 1,
+        id: columnIds[name],
         title: name,
         tasks: tasks
           .filter((task) => task.column_name === name)
@@ -45,6 +45,7 @@ function App() {
             priority:
               task.priority.charAt(0).toUpperCase() +
               task.priority.slice(1),
+            column_id: task.column_id,
             created_at: task.created_at,
           })),
       }))
@@ -80,7 +81,7 @@ function App() {
           title: newTask.trim(),
           description: '',
           priority: newTaskPriority,
-          column_id: 4,
+          column_id: columnIds['To Do'],
         }),
       })
 
@@ -91,6 +92,7 @@ function App() {
 
       setNewTask('')
       setNewTaskPriority('medium')
+
       await loadTasks()
     } catch (err) {
       console.error('Failed to add task:', err)
